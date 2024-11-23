@@ -17,7 +17,7 @@ This project demonstrates the use of AI-based services to read text from images,
 
 **Clone the repository:**
 ```bash
-https://github.com/mridul037/PikaOCR.git
+git clone https://github.com/mridul037/PikaOCR.git
 cd PikeOCR
 npm install
 node server.js
