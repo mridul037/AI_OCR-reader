@@ -11,7 +11,7 @@ const port = 3000;
 
 // API key for Together
 const together = new Together({
-  apiKey: "<<<<<<>>>>>",  // your api key
+  apiKey: "674b66450375c9c7e65fdf3c3fe23a18b6898662ea4a92c56e4ca5c470178588",  // your api key
 });
 
 app.use(express.json());
