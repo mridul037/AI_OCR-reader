@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload for OCR</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        #uploadForm {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        #imageInput {
+            display: none;
+        }
+        .file-upload {
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .file-upload:hover {
+            background-color: #2980b9;
+        }
+        #fileName {
+            margin-top: 10px;
+            font-style: italic;
+        }
+        button[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #2ecc71;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button[type="submit"]:hover {
+            background-color: #27ae60;
+        }
+        #response {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .loading {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #3498db;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload Image for OCR</h1>
+    <form id="uploadForm">
+        <input type="file" id="imageInput" accept="image/*" required>
+        <label for="imageInput" class="file-upload">Choose an image</label>
+        <div id="fileName"></div>
+        <button type="submit">Upload and Process</button>
+    </form>
+    <div id="loading" class="loading" style="display: none;"></div>
+    <div id="response"></div>
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        const fileInput = document.getElementById('imageInput');
+        const fileName = document.getElementById('fileName');
+        const loading = document.getElementById('loading');
+        const response = document.getElementById('response');
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            fileName.textContent = file ? `Selected file: ${file.name}` : '';
+        });
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            loading.style.display = 'block';
+            response.textContent = '';
+
+            try {
+                const res = await fetch('/run', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const result = await res.text();
+                response.textContent = result;
+            } catch (error) {
+                console.error('Error:', error);
+                response.textContent = 'An error occurred while uploading the image.';
+            } finally {
+                loading.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
